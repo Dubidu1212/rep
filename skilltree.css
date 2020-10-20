@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;900&family=PT+Sans&display=swap');
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #e05429;
+    color: #fff;
+    transition: all 0.3s;
+}
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body {
+    font-family: 'Exo 2', sans-serif;
+    background: #fafafa;
+}
+
+p {
+
+    font-family: 'PT Sans', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: #e05429;
+    color: #fff;
+    transition: all 0.3s;
+    
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #e05429;
+}
+
+
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #e05429;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #e05429;
+}
+
+
+
+#container{
+    flex: 1;
+}
+#sidebar{
+    flex: 0 0 65%;
+    width: 200px;
+    height: 100vh;
+    float:left;
+}
+#wrapper{
+    display: flex;
+}
+#infobox{
+    
+    background: #e05429;
+}
+
+strong{
+    font-size: 30px;
+}
