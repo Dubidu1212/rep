@@ -84,16 +84,15 @@ stage.on('wheel', (e) => {
 function fitStageIntoParentContainer() {
     var container = document.querySelector('#stage-parent');
 
-    // now we need to fit stage into parent
+    
     var containerWidth = container.clientWidth;
     var containerHeight = container.clientHeight;
-    // to do this we need to scale the stage
+    
     console.log(containerHeight);
     console.log(containerWidth);
 
     stage.width(containerWidth);
     stage.height(containerHeight);
-    //stage.scale({ x: scale, y: scale });
     stage.draw();
   }
 
