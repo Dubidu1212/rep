@@ -15,18 +15,13 @@ class node{
     }
 }
 
+var stageWidth = document.getElementById('canvasArea').clientWidth;
+var stageHeigth = window.innerHeight  - document.getElementById('Navbar').offsetHeight;
 
 
-
-
-
-
-
-var stageWidth = 1000;
-var stageHeigth = 1000;
 
 var stage = new Konva.Stage({
-    container: 'nav-home',
+    container: 'canvasArea',
     width: stageWidth,
     height: stageHeigth,
     draggable: true,
@@ -52,9 +47,11 @@ var rect = new Konva.Rect({
 });
 layer.add(rect);
 
+
+
 layer.draw();
 
-var scaleBy = 1.05;
+var scaleBy = 0.95;
 stage.on('wheel', (e) => {
     e.evt.preventDefault();
     var oldScale = stage.scaleX();
@@ -66,8 +63,7 @@ stage.on('wheel', (e) => {
     y: (pointer.y - stage.y()) / oldScale,
     };
 
-    var newScale =
-    e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+    var newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
 
     stage.scale({ x: newScale, y: newScale });
 
@@ -78,24 +74,43 @@ stage.on('wheel', (e) => {
     stage.position(newPos);
     stage.batchDraw();
 });
-//TODO: resize borders of canvas
 
+
+//init Stage
+var startWidth = document.getElementById('canvasArea').clientWidth;
+var startHeight = window.innerHeight  - document.getElementById('Navbar').offsetHeight;
+stage.width(startWidth);
+stage.height(startHeight);
+stage.batchDraw();
 
 function fitStageIntoParentContainer() {
     var container = document.querySelector('#stage-parent');
 
     
-    var containerWidth = container.clientWidth;
-    var containerHeight = container.clientHeight;
+    var containerWidth = document.getElementById('canvasArea').clientWidth;
+    var containerHeight = window.innerHeight  - document.getElementById('Navbar').offsetHeight;
     
+    console.log("containerHeight");
     console.log(containerHeight);
+
+    console.log("containerWidth");
     console.log(containerWidth);
 
+    console.log("NavH");
+    console.log(document.getElementById('Navbar').offsetHeight);
+
+    
     stage.width(containerWidth);
     stage.height(containerHeight);
-    stage.draw();
+
+    //todo try to add in canvas scale
+    
+    stage.scale(containerHeight/ startHeight);
+
+    //counter with scale
+    stage.batchDraw();
   }
 
-fitStageIntoParentContainer();
 // adapt the stage on any window resize
 window.addEventListener('resize', fitStageIntoParentContainer);
+
