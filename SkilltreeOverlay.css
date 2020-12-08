@@ -1,0 +1,111 @@
+#TreeContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+.UI{
+    z-index: 1;
+}
+
+#AddMenu{
+    position: fixed;
+    bottom: 1vh;
+    left: 0;
+}
+#ActionsMenu{
+    position: fixed;
+    bottom: 1vh;
+    right: 0;
+    width: auto;
+}
+
+.Horizontal-Scrollable{
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.btn:focus{
+    outline: 0;
+    box-shadow: none;
+}
+.btn-outline-primary{
+    border-width: 0;
+}
+.btn-outline-secondary{
+    border-width:0;
+}
+.btn-outline-danger{
+    border-width: 0;
+}
+
+.nodeContainer{
+    
+    
+}
+.nodeContainer>*{
+    
+    float: left;
+}
+
+.nodeContainer > .panel-group *{
+    margin: 5px;
+}
+.nodeContainer> .panel-group > .panel > .panel-collapse > .panel-body{
+    overflow-wrap: break-word;
+    text-align: justify;
+    word-wrap: break-word;
+}
+.nodeContainer>.panel-group>.panel>.panel-heading{
+    overflow: auto;
+}
+.nodeContainer>.panel-group{
+    width: 300px;
+}
+
+.nodeConnector{
+    margin: auto;
+    margin-top: 1px;
+    width: 100%; 
+}
+.nodeConnector>*{
+    margin:auto;
+}
+
+.nodeConnectorContainer{
+    overflow: auto;
+    
+}
+
+
+.nodeConnector.source>*{
+    margin: 2px;
+    /*float: right; Warning: This breaks the drag and drop feature*/
+}
+.nodeConnector.drain>*{
+    margin:2px;
+    float: left;
+}
+
+.panel-title>a{
+    float:left;
+    text-align: center;
+}
+.panel-title>.btn-group{
+    float: right;
+}
+
+.panel-footer>*{
+    float: right;
+    overflow: auto;
+}
+
+#ConnectionContainer{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
