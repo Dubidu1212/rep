@@ -1,6 +1,7 @@
 
-
-
+//TODO: rework the entire path mechanism as i have completely missed the point of raphael
+//The thing I thought was creating paths was actually just creating a container with all the paths
+//instead of using connections I can use raphael but i have to try and figure out how to get the oldest path. Maybe raphael allows me to add attributes or just save the id of the path in connections
 
 
 var raph;
@@ -102,6 +103,7 @@ function onConnectionDrag(event, ui){
   var connectorType = connections[connections.length-1].connectorType;
   var startPos = $("#"+connections[connections.length-1].source).find(".disconnected."+connectorType).first();
   startPos = startPos.position();
+  console.log(startPos);
   if(connectorType == "source"){
     connections[connections.length-1].path.attr("path",createBezier(startPos, ui.position));
   }
@@ -115,6 +117,8 @@ function onConnectionDropped(event, ui, dock){
   ui.draggable.removeClass("disconnected").draggable("disable");
   dock.removeClass("disconnected").droppable("disable");
   connections[connections.length-1].drain = dock.children().attr("parent");
+  
+  
   
 }
 
@@ -137,24 +141,55 @@ function createBezier(sourcePos, drainPos){
   return path;
 }
 function decodeBezier(path){
-  let arr = path.split(" ");
-  let source = arr[1];
-  let drain = arr[5];
-  source = {
-    left: source.split(",")[0],
-    top: source.split(",")[1]
+  console.log(path);
+  console.log("path");
+  if(typeof(path) == "string"){
+    let arr = path.split(" ");
+    let source = arr[1];
+    let drain = arr[5];
+    source = {
+      left: source.split(",")[0],
+      top: source.split(",")[1]
+    }
+    drain = {
+      left: drain.split(",")[0],
+      top: drain.split(",")[1]
+    }
+    res = {
+      source: source,
+      drain: drain
+    }
+    return res;
   }
-  drain = {
-    left: drain.split(",")[0],
-    top: drain.split(",")[1]
+  //TODO: Implement another check to verify that it really is a path object
+  //TODO: Dont do this. This is ugly
+  else{
+    path = path.toString();
+    console.log(path);
+    
+    let arr = path.split("C");
+    let source = arr[0];
+    source.replace("M","");
+    let drain = arr[1];
+    source = {
+      left: source.split(",")[0],
+      top: source.split(",")[1]
+    }
+    drain = {
+      left: drain.split(",")[4],
+      top: drain.split(",")[5]
+    }
+    res = {
+      source: source,
+      drain: drain
+    }
+    console.log(res);
+    return res;
   }
-  res = {
-    source: source,
-    drain: drain
-  }
-  return res;
-
+  
+  
 }
+var num =0;
 
 function onNodeDrag(event, ui){
   /*
@@ -177,6 +212,7 @@ function onNodeDrag(event, ui){
     }
   }
   */
+ console.log("connectionsOriginal",connections);
   rearangeConnections(ui.helper.attr("id"));
 
 }
@@ -187,18 +223,23 @@ function onNodeDrag(event, ui){
 function getConnectedNodes(id){
   let connectedDrain = [];//Connected with the node[id] being the drain
   let connectedSource = [];
+  console.log("connections", connections);
   for(let i=0; i<connections.length; i++){
     if(connections[i].drain == id){
       connectedSource.push({
         target: connections[i].source,
         path: connections[i].path
       });
+      console.log("path2");
+      console.log(connections[i].path);
     }
     if(connections[i].source == id){
       connectedDrain.push({
         target: connections[i].drain,
         path: connections[i].path
       });
+      console.log("path3");
+      console.log(connections[i].path);
     }
   }
   let connected = {
@@ -211,8 +252,9 @@ function getConnectedNodes(id){
 
 //TODO: only do this when nodes are not collapsed
 function rearangeConnections(id){
-  
+  console.log("connections0",connections[0]);
   let connNodes = getConnectedNodes(id);
+  console.log("connections2",connections);
   if(connNodes.sources.length == 0 && connNodes.drains.length == 0){
     return;
   }
@@ -223,12 +265,19 @@ function rearangeConnections(id){
 
     //as of now it only sorts according to heigth
     //can be optimized by using only one query
+   
+
+    //fixme: This is just pushing away the problem but ok
+    if(connNodes.drains[i].target == "helper"){
+      continue;
+    }
     let drain = {
       posx: $("#"+connNodes.drains[i].target).position().top,
       poxy: $("#"+connNodes.drains[i].target).position().left,
       id: connNodes.drains[i].target,
       path: connNodes.drains[i].path
     }
+    
     
     drains.push(drain);
   }
