@@ -22,7 +22,7 @@ var invConnections = [];
 //This is "null" when no connections are being draged
 var currentPath = null;
 
-
+var idCounter = 2
 
 $(document).ready(function(){
   //TODO: evaluate which functions need to be recalled when new objects are added to the scene such as new nodes etc
@@ -59,8 +59,16 @@ $(document).ready(function(){
     $(this).attr("parent", $(this).closest(".nodeContainer").attr('id'));
     $(this).addClass("disconnected");//this is used to dynamically find free places for paths to link to
   });
+  initButtons();
   
   
+  raph = Raphael("ConnectionContainer","100%","100%");
+
+  //TODD: Make symbols change on click
+  //use this for zoom https://jaukia.github.io/zoomooz/
+});
+
+function initButtons(){
   //Button functionalities
   $('.nodeConnectorContainer>button').click(function(){
     connectionCollapse($(this));
@@ -72,11 +80,13 @@ $(document).ready(function(){
     deleteNode($(this));
   });
 
-  raph = Raphael("ConnectionContainer","100%","100%");
+  //UI buttons
+  $('#addContentNode').click(function(){
+    addContentNode($(this));
+  })
 
-  //TODD: Make symbols change on click
-  //use this for zoom https://jaukia.github.io/zoomooz/
-});
+}
+
 
 function connectionCollapse(button){
   button.parent().find(".collapse:not(:first-child)").collapse('toggle');
@@ -94,6 +104,55 @@ function deleteNode(button){
   $('#deleteNodeModal').modal();
     
 
+}
+function addContentNode(button){
+  console.log('ye');
+  temp = $('#nTemp').html();
+  elem = $(temp);
+  $('#TreeContainer').append(elem);
+  console.log(elem);
+  elem.attr('id',"n"+idCounter);
+  elem.find('.panel-title>a').text("New Node "+ idCounter);
+  idCounter++;
+
+
+
+  //This ugly AF
+  initButtons();
+
+  $(".draggable").draggable({
+    handle: ".nodeBody",
+    opacity: 0.35,
+    drag: function(event, ui){onNodeDrag(event,ui)}
+  });
+
+  $(".nodeConnector>*").draggable({
+    appendTo: "#TreeContainer",
+    helper:"clone",
+    start: function(event, ui){startConnection(event,ui)},
+    drag: function(event, ui){onConnectionDrag(event,ui)},
+    stop: function(event, ui){stopConnection(event,ui)},
+    revert:"invalid"
+  })
+  $(".nodeConnector").droppable({
+    greedy: true,
+    drop: function(event, ui){onConnectionDropped(event, ui, $(this))}
+  });
+
+  $(".nodeConnector.drain>*").draggable("option","classes.ui-draggable","drain");
+  $(".nodeConnector.source>*").draggable("option","classes.ui-draggable","source");
+
+  $(".nodeConnector.drain").droppable("option","accept", ".source");
+  $(".nodeConnector.source").droppable("option","accept", ".drain");
+
+  //add correct parents; used when creating the path
+  //add connectorNumber so that we can dynamically adjust the bezier curves when teh parent moves
+  
+  //Assigns to each child of nodeConnector a parent variable, which can be used later in the drag function
+  $(".nodeConnector>*").each(function(){
+    $(this).attr("parent", $(this).closest(".nodeContainer").attr('id'));
+    $(this).addClass("disconnected");//this is used to dynamically find free places for paths to link to
+  });
 }
 
 
