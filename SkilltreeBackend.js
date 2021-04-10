@@ -4,9 +4,10 @@
 //instead of using connections I can use raphael but i have to try and figure out how to get the oldest path. Maybe raphael allows me to add attributes or just save the id of the path in connections
 
 
-var raph;
+var paper;
 
 //connections is a adjacency list implemented as set of arrays. Elements are only added once the connection is dropped
+//each element consists of a destination node and path id
 //raphael draws the connections by using jquery. 
 //raphael updates every time that the scene changes (eg drag and drop operations)
 //connections only updates when nodes/connections are deleted or new connections are made.
@@ -16,6 +17,11 @@ var connections = [];
 
 //same as connections but points from drain to source
 var invConnections = [];
+
+//set of paths 
+//{key: pathid, value: path}
+//paths are added at the same time as to connections
+var paths = []
 
 
 //This is the path that leads to the helper at the moment
@@ -62,10 +68,10 @@ $(document).ready(function(){
   initButtons();
   
   
-  raph = Raphael("ConnectionContainer","100%","100%");
+  paper = Raphael("ConnectionContainer","100%","100%");
 
   //TODD: Make symbols change on click
-  //use this for zoom https://jaukia.github.io/zoomooz/
+  //TODO: use this for zoom https://jaukia.github.io/zoomooz/
 });
 
 function initButtons(){
@@ -196,7 +202,7 @@ function startConnection(event, ui){
   }
 
   //assigns the newly created path to currentPath
-  var path = raph.path(createBezier(ui.position,ui.position));
+  var path = paper.path(createBezier(ui.position,ui.position));
   currentPath = {
     path: path,
     //This works, because in the beginning each connector (helper) receives the parent attribute
@@ -230,11 +236,13 @@ function onConnectionDrag(event, ui){
   
   //This part rearanges the other connections
   var order = calcRearangeConnecors(currentPath.node,locConnections);
-  updateConnections(currentPath.node, order);
+  updateConnections(currentPath.node, order, currentPath.conType);
 
   //draws the path to the helper
   //THIS IS WHERE I LEFT OF
-
+  //alert(currentPath.node);
+  //currentPath is a string of the parent
+  
 
   //currentPath.path(createBezier());
 }
@@ -267,15 +275,16 @@ function calcRearangeConnecors(node, locConnections){
     let c = locConnections[i];
     locConnections[i] = {
       id: c,
-      h:$("#"+c).position().top,
+      pos:$("#"+c).position()
+      
     }
   }
 
   //sort by heigth ascending in topdistance eg descending in screeen position
   locConnections.sort(function(a,b){
-    return a.h - b.h;
+    return a.pos.top() - b.pos.top();
   });
-
+  console.log(locConnections);
   return locConnections;
 }
 
@@ -283,12 +292,26 @@ function calcRearangeConnecors(node, locConnections){
 //returns the path which connects n1 and n2
 //TODO: Find case for double connections
 function findPath(n1, n2){
-
+  return paper.getById();
 }
 
 //redraws the path to a certain node given the order
 //leaves out the helper
-function updateConnections(node, order){
+function updateConnections(node, order, side){
+  if(side == "source"){//to the right
+    var conBox = $("#"+ node).find("nodeConnectorContainer.right");
+  }
+  else{
+    var conBox = $("#"+ node).find("nodeConnectorContainer.left");
+  }
+  //This assumes items are found from top to bottom which might not be true
+  conBox.find(".nodeConnecor").each(function (index, connector) {  
+    let currDest = order[index];
+    let currDestNode = currDest.id;
+    let path = findPath(node,currDestNode);
+    path.path = createBezier(connector.position, currDest.pos);
+  });
+
 
 }
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Document</title>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    
+   
+    <link href="./index.css" rel="stylesheet"><link/>
+</head>
+<body>
+   
+    <div id="app">
+        
+        <paralax id="boat" src="bg.jpg" scroll-speed="-0.2" margin="0"></paralax>
+        <h1>Welcome to my Project Page</h1>
+        <dyn-box scroll-speed-x="0.5"> 
+            <div style="width: 20vw;">
+                <img id="rocket" src="rocket.png"/>
+                <img id="foam" src="foam.png"/>
+            </div>
+        </dyn-box>
+        <dyn-box scroll-speed-x="-0.3" scroll-speed-y='0'> 
+            <div class='box'>
+               Lets goooooo!
+            </div>
+        </dyn-box>
+        <dyn-box scroll-speed-x="0.3" scroll-speed-y='0'> 
+            <div class='box'>
+               Lets goooooo!
+            </div>
+        </dyn-box>
+        <dyn-box scroll-speed-x="0.1" scroll-speed-y='0.2'>
+            <div class='box'>
+                Lets hello!
+             </div>
+        </dyn-box>
+        
+        <ul>
+            <li v-for="(link, index) in links" :href="link">
+                <a :href="link"> {{link}}</a>
+            </li>
+            <li v-for="(link, index) in links" :href="link">
+                <a :href="link"> {{link}}</a>
+            </li>
+            <li v-for="(link, index) in links" :href="link">
+                <a :href="link"> {{link}}</a>
+            </li>
+        </ul>
+    </div>
+    
+    <script src="index.js"></script>
+</body>
+</html>
