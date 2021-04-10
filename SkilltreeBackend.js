@@ -117,7 +117,7 @@ function addContentNode(button){
 
 
 
-  //This ugly AF
+  //This ugly AF (and doesnt work)
   initButtons();
 
   $(".draggable").draggable({
