@@ -247,12 +247,33 @@ function onConnectionDrag(event, ui){
   updateConnections(currentPath.node, order, currentPath.conType);
 
   //draws the path to the helper
-  //THIS IS WHERE I LEFT OF
   //alert(currentPath.node);
   //currentPath is a string of the parent
-  
 
-  //currentPath.path(createBezier());
+  //fixme: find better way to do this
+  let i =0;
+  for(; i<order.length;i++){
+    if(order[i].id == 'helper'){
+      break;
+    }
+  }
+
+  //This querry is shit and doesnt work. The same (faulty) querry is used in the function Update...
+  //The goal here would be to find the only free space left on the node and draw a bezier curve from that to ui.position
+  if(currentPath.conType == "source"){//to the right
+    var conBox = $("#"+ currentPath.node).find(".nodeConnectorContainer.right");
+  }
+  else{
+    var conBox = $("#"+ currentPath.node).find(".nodeConnectorContainer.left");
+  }
+  
+  //finds the connector with the attribute helper
+  let pos = conBox.find(".nodeConnector");
+
+  console.assert(pos != null, 'pos==null');
+  console.log(conBox);
+  console.log(pos);
+  //currentPath.path.attr("path",createBezier(ui.position, pos ));
 }
 
 
@@ -292,13 +313,14 @@ function calcRearangeConnecors(node, locConnections){
   locConnections.sort(function(a,b){
     return a.pos.top() - b.pos.top();
   });
-  console.log(locConnections);
+
   return locConnections;
 }
 
 
 //returns the path which connects n1 and n2
 //TODO: Find case for double connections
+//fixme: add search in paths for the id
 function findPath(n1, n2){
   return paper.getById();
 }
@@ -313,9 +335,20 @@ function updateConnections(node, order, side){
     var conBox = $("#"+ node).find("nodeConnectorContainer.left");
   }
   //This assumes items are found from top to bottom which might not be true
-  conBox.find(".nodeConnecor").each(function (index, connector) {  
+  conBox.find(".nodeConnector").each(function (index, connector) {
     let currDest = order[index];
     let currDestNode = currDest.id;
+    //set helper attribute to allow the helper to connect to it in a later stage
+    if(currDestNode=='helper'){
+      connector.attr('helper', 1);
+      return;
+    }
+    //Remove the helper attribute if not connected to helper anymore
+    if(connector.attr('helper') == 1){
+      console.log('relic helper found; removing it');
+      connector.attr('helper', null);
+    }
+
     let path = findPath(node,currDestNode);
     path.path = createBezier(connector.position, currDest.pos);
   });
