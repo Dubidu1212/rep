@@ -122,9 +122,17 @@ function addContentNode(button){
   idCounter++;
 
 
+  //initialize button functionalities on this element
+  elem.find('.nodeConnectorContainer>button').click(function(){
+    connectionCollapse($(this));
+  });
+  elem.find('.expandNodeButton').click(function(){
+    expandNode($(this));
+  });
+  elem.find('.deleteNodeButton').click(function(){
+    deleteNode($(this));
+  });
 
-  //This ugly AF (and doesnt work)
-  initButtons();
 
   $(".draggable").draggable({
     handle: ".nodeBody",
